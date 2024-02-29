@@ -11,7 +11,7 @@ from PIL import Image
 from git import Repo
 import base64
 import requests
-import jsons
+import json
 from google.cloud import storage
 
 credentials = service_account.Credentials.from_service_account_info(
