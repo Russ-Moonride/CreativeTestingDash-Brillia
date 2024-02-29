@@ -11,7 +11,7 @@ from PIL import Image
 from git import Repo
 import base64
 import requests
-import json
+import jsons
 from google.cloud import storage
 
 credentials = service_account.Credentials.from_service_account_info(
@@ -20,11 +20,11 @@ credentials = service_account.Credentials.from_service_account_info(
 client = bigquery.Client(credentials=credentials)
 
 #### Information to be changed when switching accounts ###
-Account = "Sunpower"
-bucket_name = "creativetesting_images"
-main_table_id = 'sunpower-375201.sunpower_segments.sunpower_platform_ad_level'
-creativetesting_table_id = 'sunpower-375201.sunpower_streamlit.CreativeTestingStorage'
-correct_hashed_password = "Sunpower1234"
+Account = "Brillia"
+bucket_name = "creativetesting_images_brillia"
+main_table_id = 'brillia-415723.brillia_segments.ad_level_data'
+creativetesting_table_id = 'brillia-415723.streamlit_data.CreativeTestingStorage'
+correct_hashed_password = "Brillia"
 
 
 st.set_page_config(page_title= f"{Account} Creative Ad Testing Dash",page_icon="🧑‍🚀",layout="wide")
@@ -158,27 +158,6 @@ def upload_to_gcs(bucket_name, source_file, destination_blob_name):
     # Create a new blob and upload the file's content.
     blob = bucket.blob(destination_blob_name)
     blob.upload_from_file(source_file, content_type='image/jpeg')  # Set content_type as per your file type
-
-
-def delete_ad_set(ad_set_value_to_delete, full_data):
-        # SQL statement for deletion
-        if ad_set_value_to_delete in full_data['Ad_Set_Name__Facebook_Ads'].values:
-                  delete_query = """
-                  DELETE FROM `{creativetesting_table_id}`
-                  WHERE Ad_Set = @ad_set_value
-                  AND Type = 'Past'
-                  """
-                  # Configure query parameters
-                  job_config = bigquery.QueryJobConfig(
-                      query_parameters=[
-                          bigquery.ScalarQueryParameter("ad_set_value", "STRING", ad_set_value_to_delete)
-                      ]
-                  )
-                  # Execute the query
-                  client.query(delete_query, job_config=job_config).result()
-                  st.experimental_rerun()
-        else:
-                  st.error("Ad_Set does not exist")
 
 
 ### Code for past tests function ###
